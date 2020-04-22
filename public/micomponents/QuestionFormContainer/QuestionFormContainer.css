@@ -1,0 +1,98 @@
+.contact-form-format{
+    padding: 6rem 10rem;
+}
+
+.form-row{
+    display: flex;
+    justify-content: center;
+}
+
+.input-box{
+    flex-grow: 1;
+}
+.button-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.mm-button{
+	border: 2px solid black;
+	padding: 1rem;
+	transition: padding 0.1s, margin 0.1s;
+	color: black;
+	margin-top: 1.5rem;
+	cursor: pointer;
+	font-size: 1.5rem;
+	font-family: Montserrat;
+}
+
+.mm-button:hover{
+	padding: 1.2rem;
+	margin-top: 1.4rem;
+}
+
+.text-title{
+	font-size: 6rem; 
+	color: #ffb0b0; 
+	font-family: Trampoline; 
+	line-height: 1;
+	text-align: center;
+}
+
+.processing-wall{
+	background-color: rgba(0,0,0,0.5);
+	position: fixed;
+	z-index: 10;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;    
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast-message{
+	font-size: 50px;
+}
+
+.thank-you-text {
+	font-size: 1.2rem;
+	line-height: 1.9rem;
+	padding: 2rem;
+	font-family: Montserrat;
+}
+
+.form-completed{
+	display: flex;
+    flex-direction: column;
+	align-items: center;
+	padding: 10rem 10rem;
+}
+
+.input-error-message{
+	color: red;
+	font-family: Montserrat;
+	white-space: pre-line;
+	text-align: center;
+}
+
+.hide{
+	display: none;
+}
+
+
+@media only screen and (max-width: 765px){
+	.contact-form-format{
+		padding: 6rem 1rem;
+	}
+
+	.form-row{
+		flex-wrap: wrap;
+	}
+	.form-completed{
+		padding: 6rem 1rem;
+	}
+	
+}

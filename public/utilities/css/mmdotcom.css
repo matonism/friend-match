@@ -1,0 +1,257 @@
+
+@font-face {
+	font-family: "Trampoline";
+    src: url("/utilities/fonts/Trampoline demo.ttf") format("truetype");
+}
+@font-face {
+	font-family: "Bodoni";
+    src: url(/utilities/fonts/BodoniFLF-Italic.ttf) format("truetype");
+}
+@font-face {
+	font-family: "Playfair";
+    src: url(/utilities/fonts/PlayfairDisplay-Italic.ttf) format("truetype");
+}
+@font-face {
+	font-family: "Theano";
+    src: url(/utilities/fonts/TheanoDidot-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "OpenSans";
+    src: url(/utilities/fonts/OpenSans-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "Montserrat";
+    src: url(/utilities/fonts/Montserrat-Regular.ttf) format("truetype");
+}
+
+body {
+	margin: 0px;
+}
+.fill-content-body{
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+}
+.masthead{
+	flex-grow: 3;
+	height: 100%;
+}
+.hamburger-icon{
+	cursor: pointer;
+	font-size: 2rem;
+	height: 100%;
+}
+.footer-item{
+	flex-grow: 1;
+	margin: auto;
+}
+
+
+.intro-container{
+	display: flex;
+	flex-direction: column;
+	min-height: 400px;
+	flex-grow:1;
+	height: 100%;
+}
+
+
+.intro-header{
+	flex-grow: 1;
+	background-color: black;
+}
+
+
+.intro-body{    
+    flex-grow: 2;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+.name-format{    
+	border-bottom: 0.3rem solid #ffb0b0;
+	color: white;
+	font-size: 6rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-bottom: 0.5rem;
+	font-family: "Trampoline";
+}
+.text-container {
+	font-size: 1.2rem;
+	line-height: 1.9rem;
+	padding: 2rem;
+	font-family: Montserrat;
+}
+
+.quote-text{
+	font-family: Theano;
+	font-size: 2rem;
+    line-height: 2.5rem;
+	padding: 0 2rem 0 2rem;
+	color: white;
+}
+
+.quote-name{
+	text-align: right; 
+	font-size: 1.3rem;
+}
+.text-title{
+	font-size: 6rem; 
+	color: #ffb0b0; 
+	font-family: Trampoline; 
+	line-height: 1;
+	text-align: center;
+}
+.text-block{ 
+    font-size: 3rem;
+    color: #ffb0b0;
+    display: flex;
+    flex-flow: column;
+    font-family: "Bodoni";
+    text-align: center;
+	opacity: 0;
+	transition: opacity 0.5s;
+}
+
+.image-oval{
+	border: 1rem solid #ffb0b0;
+    border-radius: 5rem;
+    align-self: center;
+    height: 20rem;
+    width: 15rem;
+	margin-bottom: 3rem;
+	background-image: url('/utilities/images/thumbnail.jpg');
+	background-size: 100% 100%;
+}
+
+.carousel-bar{
+	height: auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	text-align: center;
+	height: 60px;
+	border-top: 3px solid rgba(0,0,0,0.05);
+	color: white;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.carousel-control {
+	display: flex;
+	flex-grow: 1;
+	cursor: pointer;
+}
+.carousel-control.selected {
+	background-color: rgba(255,255,255,0.25);
+}
+
+.lock-container{
+	position: relative;
+}
+
+.lock-bell{
+	height: 20px;
+	width: 20px;
+	border-radius: 10px 10px 10px 10px;
+}
+
+
+.parallax-content{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+}
+
+.padding-vertical {
+	padding: 5rem 0rem;
+}
+.padding-horizontal-m {
+	padding: 0rem 7rem;
+	text-align: center;
+}
+
+.skill-section-header {
+    font-family: Trampoline;
+    font-size: 2rem;
+	padding-top: 3rem;
+	text-align: center;
+}
+
+
+
+.skill-category{
+	width: 50%;
+}
+
+.skill-section{
+	background-color: rgba(195,180,180,0.1);
+	padding: 3rem 5%;
+	display: flex; 
+	flex-wrap: wrap;
+	width: 90%;
+}
+
+.project-section{
+	padding: 10rem 5%;
+	width: 90%;
+}
+
+.project-container{
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.about-me-section{
+	height: 30rem; 
+	display: flex; 
+	flex-direction: column; 
+	justify-content: center;
+}
+
+.contact-form-container{
+	flex-grow: 2;
+	background-color: rgba(195,180,180,0.1);
+}
+
+.contact-header{
+	background-image: url(/utilities/images/fieldbw.png); 
+	background-size: cover; 
+	height: 10rem; 
+	display: flex; 
+	justify-content: center; 
+	align-items: center;
+	font-size: 6rem; 
+	color: white; 
+	font-family: Trampoline; 
+	padding-top: 1rem;
+}
+
+@media only screen and (max-width: 765px) {
+	
+	.padding-horizontal-m {
+		padding: 0rem 1rem;
+		text-align: center;
+	}
+
+	.skill-category{
+		width: 100%;
+	}
+
+	.name-format{    
+		font-size: 5rem;
+	}
+
+	.text-block{ 
+		font-size: 2.2rem;
+	}
+
+	.skill-section{
+		padding: 3rem 0rem;
+		width: 100%;
+	}
+}
