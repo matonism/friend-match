@@ -15,28 +15,30 @@
     flex-direction: column;
     align-items: flex-end;
 }
-.mm-button{
+.start-over-button{
 	border: 2px solid black;
-	padding: 1rem;
+	padding: 0.8rem;
 	transition: padding 0.1s, margin 0.1s;
 	color: black;
-	margin-top: 1.5rem;
+	margin: 1.5rem;
 	cursor: pointer;
-	font-size: 1.5rem;
+	font-size: 1rem;
 	font-family: Montserrat;
+	display: inline;
 }
 
-.mm-button:hover{
+.start-over-button:hover{
 	padding: 1.2rem;
 	margin-top: 1.4rem;
 }
 
-.text-title{
-	font-size: 6rem; 
-	color: #ffb0b0; 
-	font-family: Trampoline; 
-	line-height: 1;
-	text-align: center;
+.text-title{    
+	font-size: 5rem;
+    color: #ffb0b0;
+    font-family: Trampoline;
+    line-height: 1;
+    text-align: center;
+    padding: 2rem 0 1rem;
 }
 
 .processing-wall{
@@ -82,7 +84,30 @@
 	display: none;
 }
 
+.header{
+	display: flex;
+	background-color: rgba(0,0,0,0.1);
+	justify-content: space-between;
+	align-items: center;
+}
 
+.spacer {
+	width: 12rem;
+}
+
+question-form{
+	display: flex;
+    align-items: center;
+    flex-flow: column;
+}
+
+.mobile.start-over-button{
+	display: none;
+}
+
+.submit-button-container{
+	display: none;
+}
 @media only screen and (max-width: 765px){
 	.contact-form-format{
 		padding: 6rem 1rem;
@@ -94,5 +119,35 @@
 	.form-completed{
 		padding: 6rem 1rem;
 	}
+
+	.spacer{
+		display: none;
+	}
+
+	.header .spacer .start-over-button{
+		display: none;
+	}
+
+	.header{
+		align-items: center;
+	}
+	.mobile.start-over-button{
+		display: inline-block;
+	}
+
+	.submit-button-container{
+		display: block;
+		text-align: center;
+	}
+
+	.text-title{    
+		width: 100%;
+	}
+
+	.start-over-button:hover{
+		padding: 1rem;
+		margin-top: 1.5rem;
+	}
+	
 	
 }

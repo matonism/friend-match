@@ -1,28 +1,55 @@
 import MiCoolComponent from "../../micomponent-framework/MiCoolComponent.js";
 
-class ContactForm extends MiCoolComponent {
+class QuestionForm extends MiCoolComponent {
 
     static get observedAttributes(){
-        return ['question-id', 'option-1', 'option-2']
+        return ['question-id', 'option-1', 'option-2', 'option-1-percentage', 'option-2-percentage', 'question-value', 'question-header']
     }
 
     connectedCallback(){
         super.connectedCallback();
-        this.questionValue = 50;
+        // this.questionValue = 50;
     }
 
     renderedCallback(){
 
-        let nextButton = this.shadowRoot.querySelector('.submit-button');
+        let nextButton = this.shadowRoot.querySelector('.next-button');
         nextButton.addEventListener('click', (event) => {
-            this.saveQuestionValue(event)
+            this.moveToNextQuestion(event)
+        });
+        let previousButton = this.shadowRoot.querySelector('.previous-button');
+        previousButton.addEventListener('click', (event) => {
+            this.moveToPreviousQuestion(event)
         });
 
         let input = this.shadowRoot.querySelector('custom-input#value');
-        input.addEventListener('custominputkeyup', (event) => {
-            this.questionValue = event.detail.value;
+        input.addEventListener('custominputset', (event) => {
+            this.setAttribute('question-value', event.detail.value);
+            this.setAttribute('option-1-percentage', 100 - event.detail.value + '%');
+            this.setAttribute('option-2-percentage', event.detail.value + '%');
+            this.saveQuestionValue(event);
         });
 
+    }
+
+    rerenderedCallback(){
+        if(!!this.getAttribute('question-value')){
+            this.shadowRoot.querySelector('custom-input#value').setAttribute('value', this.getAttribute('question-value'));
+        }
+    }
+
+    moveToNextQuestion(){
+        //this.showProcessingWall();
+        let nextEvent = new CustomEvent('next', () => {});
+        this.dispatchEvent(nextEvent);
+        //setTimeout(() => {
+            //this.hideProcessingWall();
+        //}, 200);
+    }
+
+    moveToPreviousQuestion(){
+        let previousEvent = new CustomEvent('previous', () => {});
+        this.dispatchEvent(previousEvent);
     }
 
     saveQuestionValue(event){
@@ -32,12 +59,11 @@ class ContactForm extends MiCoolComponent {
             let questionEvent = new CustomEvent('questionvalueset', {
                 detail: {
                     'questionId': this.getAttribute('question-id').toString(),
-                    'value': this.questionValue
+                    'value': this.getAttribute('question-value')
                 }
             });
 
             this.dispatchEvent(questionEvent);
-            this.questionValue = 50;
         }else{
             this.showInputError('custom-input#value');
         }
@@ -79,4 +105,4 @@ class ContactForm extends MiCoolComponent {
     }
 }
 
-export default ContactForm;
+export default QuestionForm;

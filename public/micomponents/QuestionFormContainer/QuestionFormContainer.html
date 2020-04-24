@@ -1,5 +1,22 @@
 <template>
-    <question-form></question-form>
 
-    <div class="results hide">Results!</div>
+    <div class="header">
+        <div class="spacer"></div>
+        <div class="text-title">Friend Survey</div>
+        <div class="spacer">
+            <div class="mm-button start-over-button">Start Over</div>
+        </div>
+
+    </div>
+    <question-form></question-form>
+    <!-- <div class="results hide">Results!</div> -->
+    <survey-results class="hide"></survey-results>
+
+    <div class="submit-button-container">
+        <div class="mm-button start-over-button mobile">Start Over</div>
+    </div>
+
+    <div class="processing-wall hide">
+        <img src="/utilities/images/loading.gif"/>
+    </div>
 </template>

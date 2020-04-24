@@ -1,0 +1,12 @@
+.row {
+    display: flex;
+}
+
+.column {
+    text-align: left;
+    width: 10rem;
+    border: 1px solid black;
+    padding: 1rem;
+    font-size: 2rem;
+    font-family: Montserrat;
+}

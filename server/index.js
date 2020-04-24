@@ -7,6 +7,8 @@ var fs = require('fs');
 // var querystring = require('querystring');
 // var cookieParser = require('cookie-parser');;
 var bodyParser = require('body-parser');
+var getSurveyResults = require('./getSurveyResults.js');
+var getSurveyQuestions = require('./getSurveyQuestions.js');
 // var serverController = require('./serverController.js');
 // const fileUpload = require('express-fileupload');
 
@@ -62,6 +64,18 @@ function handleRedirect(req, res) {
 // }));
 
 // serverController.handleRequests(app);
+
+app.post('/getSurveyResults', (request, response) => {
+    getSurveyResults(request.body).then(scoreMap => {
+        response.send(scoreMap);
+    });
+});
+
+app.get('/getSurveyQuestions', (request, response) => {
+    getSurveyQuestions().then(questionData => {
+        response.send(questionData);
+    })
+});
 
 var PORT = process.env.PORT || 3000;
 console.log('Listening on 3000....');

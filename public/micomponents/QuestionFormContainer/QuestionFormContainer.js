@@ -1,54 +1,124 @@
 //TODO: implement a loading icon for when email is sending
 import MiCoolComponent from "../../micomponent-framework/MiCoolComponent.js";
 
-class ContactForm extends MiCoolComponent {
+class QuestionFormContainer extends MiCoolComponent {
 
     static get observedAttributes(){
-        return ['message-text', 'input-error-message']
+        return ['message-text', 'input-error-message', 'question-count', 'current-question']
     }
 
     connectedCallback(){
         super.connectedCallback();
-        this.questionBank = this.getQuestions();
+        this.questionIndex = 0;
     }
 
     renderedCallback(){
+        let startOverButton = this.shadowRoot.querySelectorAll(".start-over-button");
+        startOverButton[0].addEventListener('click', event => {
+            this.showProcessingWall();
+            setTimeout(() => {
+                location.reload();
+            }, 1000)
+        });
 
-		let questionForm = this.shadowRoot.querySelector("question-form");
+        startOverButton[1].addEventListener('click', event => {
+            this.showProcessingWall();
+            setTimeout(() => {
+                location.reload();
+            }, 1000)
+        });
+
+        let questionForm = this.shadowRoot.querySelector("question-form");
+        
         questionForm.addEventListener("questionvalueset", event => {
-            let questionIndex = this.storeResult(event);
-            this.setCurrentQuestion(questionIndex + 1);
+            this.storeResult(event);
+        });
+
+        questionForm.addEventListener("next", event => {
+            this.setCurrentQuestion(++this.questionIndex);
+        });
+
+        questionForm.addEventListener("previous", event => {
+            this.setCurrentQuestion(--this.questionIndex);
         });
         
-        this.initializeQuestionForm();
+        this.getQuestions().then(() => {
+            this.initializeQuestionForm();
+        });
 
 
     }
 
     getQuestions(){
-        return [
-            {questionId: '1111', option1: 'Feminine', option2: 'Masculine', value: 50},
-            {questionId: '2222', option1: 'Good', option2: 'Evil', value: 50}
-        ];
+        return new Promise((resolve, reject)=> {
+            
+            this.showProcessingWall();
+            let valid = true;
+
+            if(valid){
+                let questionFormContainer = this;
+                try{
+                    $.ajax({
+                        type: "GET",
+                        url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyQuestions",
+                        // url : "http://localhost:3000/getSurveyQuestions",
+                        dataType: "json",
+                        crossDomain: "true",
+                        contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        console.log(data);
+                        questionFormContainer.questionBank = data;
+                        questionFormContainer.hideProcessingWall();
+                        resolve(data);
+                    },
+                    error: function (error, textStatus) {
+                        // show an error message
+                        questionFormContainer.showError();
+                        reject(error);
+                    }});
+                }catch(error){
+                    console.log(error);
+                    reject(error)
+                }
+    
+            }else{
+                this.hideProcessingWall();
+                reject();
+            }
+            // return [
+            //     {questionId: '1', option1: 'Feminine', option2: 'Masculine', value: 50},
+            //     {questionId: '2', option1: 'Good', option2: 'Evil', value: 50}
+            // ];
+
+        });
     }
 
     initializeQuestionForm(){
-        this.setCurrentQuestion(0);
+        
+        this.setAttribute('question-count', this.questionBank.length);
+        this.setCurrentQuestion(this.questionIndex);
     }
 
     setCurrentQuestion(questionIndex){
         if(questionIndex < this.questionBank.length){
             let questionForm = this.shadowRoot.querySelector('question-form');
-            questionForm.setAttribute('question-id', this.questionBank[questionIndex].questionId);
+            this.setAttribute('current-question', questionIndex + 1);
+            questionForm.setAttribute('question-header', 'Question ' + this.getAttribute('current-question') + '/' + this.getAttribute('question-count'));
+            questionForm.setAttribute('question-id', this.questionBank[questionIndex].questionid);
             questionForm.setAttribute('option-1', this.questionBank[questionIndex].option1);
             questionForm.setAttribute('option-2', this.questionBank[questionIndex].option2);
+            questionForm.setAttribute('option-1-percentage', 100 - this.questionBank[questionIndex].value + '%');
+            questionForm.setAttribute('option-2-percentage', this.questionBank[questionIndex].value + '%');
+            questionForm.setAttribute('question-value', this.questionBank[questionIndex].value);
+        }else if(questionIndex == this.questionBank.length){
+            this.submitAnswers();
         }
     }
 
     storeResult(event){
         let questionNumber = 0;
         this.questionBank.forEach((question, index) => {
-            if(question.questionId == event.detail.questionId){
+            if(question['questionid'.toLowerCase()] == event.detail.questionId){
                 question.value = event.detail.value;
                 questionNumber = index;
             }
@@ -56,12 +126,42 @@ class ContactForm extends MiCoolComponent {
         return questionNumber;
     }
 
+    submitAnswers(){
+        this.showProcessingWall();
+        let valid = true;
+        console.log('figure out submitting forms in nodejs and sending notification to me');
+        if(valid){
+            let questionFormContainer = this;
+            $.ajax({
+                type: "POST",
+                url : "http://localhost:3000/getSurveyResults",
+                // url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyResults",
+                dataType: "json",
+                crossDomain: "true",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(this.questionBank),
+            success: function (data) {
+                console.log(data);
+                let surveyResultsElement = questionFormContainer.shadowRoot.querySelector('survey-results');
+                surveyResultsElement.results = data;
+                surveyResultsElement.classList.remove('hide');
+                surveyResultsElement.showResults();
+                questionFormContainer.shadowRoot.querySelector('question-form').classList.add('hide');
+                questionFormContainer.hideProcessingWall();
+            },
+            error: function (error, textStatus) {
+                questionFormContainer.showError();
+                questionFormContainer.hideProcessingWall();
+            }});
+
+        }else{
+            this.hideProcessingWall();
+        }
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
-    submitAnswers(){
 
-    }
 
     setInput(event){
         console.log('input changed');
@@ -69,31 +169,7 @@ class ContactForm extends MiCoolComponent {
     }
 
     submit(){
-        this.showProcessingWall();
-        let valid = this.validateSubmission();
-        console.log('figure out submitting forms in nodejs and sending notification to me');
-        if(valid){
-            let contactForm = this;
-            $.ajax({
-                type: "POST",
-                url : "https://adu6x55ip7.execute-api.us-east-2.amazonaws.com/contact-me-email",
-                dataType: "json",
-                crossDomain: "true",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(this.form),
-            success: function () {
-                toastr.success('Your message was sent successfully');
-                contactForm.showFormCompleted();
-            },
-            error: function (error, textStatus) {
-                // show an error message
-                toastr.error('Something went wrong sending your message');
-                contactForm.showError();
-            }});
-
-        }else{
-            this.hideProcessingWall();
-        }
+        
         
     }
 
@@ -179,4 +255,4 @@ class ContactForm extends MiCoolComponent {
     }
 }
 
-export default ContactForm;
+export default QuestionFormContainer;

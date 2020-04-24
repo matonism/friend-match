@@ -1,5 +1,7 @@
 .contact-form-format{
-    padding: 6rem 10rem;
+	padding: 6rem 10rem;
+	width: 100%;
+	max-width: 50rem;
 }
 
 .form-row{
@@ -12,8 +14,7 @@
 }
 .button-container{
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    justify-content: space-between;
 }
 .mm-button{
 	border: 2px solid black;
@@ -32,11 +33,20 @@
 }
 
 .text-title{
-	font-size: 6rem; 
+	font-size: 1.5rem; 
 	color: #ffb0b0; 
-	font-family: Trampoline; 
+	font-family: Montserrat; 
 	line-height: 1;
 	text-align: center;
+}
+
+.title-sub-text{
+	font-size: 1rem; 
+	color: #ffb0b0; 
+	font-family: Montserrat; 
+	line-height: 1;
+	text-align: center;
+
 }
 
 .processing-wall{
@@ -82,16 +92,42 @@
 	display: none;
 }
 
-
+.slider-value-display{
+	font-family: Montserrat;
+	font-size: 2rem;
+	text-align: center;
+	color: #ffb0b0;
+}
 
 .scale-labels{
 	display: flex;
 	justify-content: space-between;
+	padding-bottom: 1rem;
+}
+.question-header{
+	font-family: Montserrat;
+	font-size: 1rem;
+	text-align: center;
+	padding-bottom: 2rem;
+}
+.question-index{
+	font-family: Montserrat;
+	font-size: 2rem;
+	text-align: center;
+	padding-bottom: 2rem;
+}
+.question-form-container{
+	width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @media only screen and (max-width: 765px){
 	.contact-form-format{
 		padding: 6rem 1rem;
+		width: 100%;
+		max-width: 90%;
 	}
 
 	.form-row{
@@ -101,4 +137,12 @@
 		padding: 6rem 1rem;
 	}
 	
+	.text-title{
+		font-size: 1.2rem; 
+	}
+
+	.mm-button:hover{
+		padding: 1rem;
+		margin-top: 1.5rem;
+	}
 }

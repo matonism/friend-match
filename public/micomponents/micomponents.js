@@ -7,6 +7,12 @@ customElements.define('question-form-container', QuestionFormContainer);
 import CustomInput from './CustomInput/CustomInput.js';
 customElements.define('custom-input', CustomInput);
 
+import SurveyResults from './SurveyResults/SurveyResults.js';
+customElements.define('survey-results', SurveyResults);
+
+import SurveyResultsLine from './SurveyResultsLine/SurveyResultsLine.js';
+customElements.define('survey-results-line', SurveyResultsLine);
+
 // import HoverBox from './HoverBox/HoverBox.js';
 // customElements.define('hover-box', HoverBox);
 

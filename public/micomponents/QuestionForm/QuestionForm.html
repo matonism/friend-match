@@ -1,41 +1,39 @@
 <template>
 
-    <div class="contact-form-format">
+    <div class="question-form-container">
         
-		<div class="text-title">
-			{!question-id}
-        </div>
-
-        <div class="input-error-message hide">
-            {!input-error-message}
-        </div>
-
-        <div class="scale-labels">
-            <div>
-                {!option-1}
-            </div>
-            <div>
-                {!option-2}
-            </div>
-        </div>
-        <div class="form-inputs">
-            <custom-input class="input-box" id="value" name="value" label="Value" type="number" min="0" max="100" variant="minimal"></custom-input>
-
-            <!-- TODO: put a slider here -->
-
-
-            <!-- <div class="form-row">
-                <custom-input class="input-box" id="name" name="name" label="Name" type="text" variant="minimal"></custom-input>
-                <custom-input class="input-box" id="email" name="email" label="Email" type="text" variant="minimal"></custom-input>
-            </div>
-            <custom-input id="content" name="content" label="Requests/Questions/Compliments/Insults/etc..." type="textarea" variant="minimal"></custom-input> -->
+        <div class="contact-form-format">
             
-            
-            <div class="button-container">
-                <div class="mm-button submit-button">NEXT</div>
+            <div class="input-error-message hide">
+                {!input-error-message}
             </div>
-        </div>
 
+                
+            <div class="question-index">
+                {!question-header}
+            </div>
+            <div class="question-header">
+                Use the slider to indicate where you fall on the spectrum
+            </div>
+
+            <div class="scale-labels text-title">
+                <div><span>{!option-1}</span><span class="title-sub-text"> ( {!option-1-percentage} ) </span></div>
+                <div><span>{!option-2}</span><span class="title-sub-text"> ( {!option-2-percentage} ) </span></div>
+            </div>
+
+            <div class="form-inputs">
+                <div class="slidecontainer">
+                    <custom-input id="value" name="value" label="Value" type="range" min="1" max="100" value="50" class="slider" id="myRange" hide-label="true">
+                </div>            
+                
+                <div class="button-container">
+                    <div class="mm-button previous-button">PREVIOUS</div>
+                    <div class="mm-button next-button">NEXT</div>
+                </div>
+            </div>
+
+        </div>
+        
     </div>
 
 
@@ -51,4 +49,5 @@
     <div class="processing-wall hide">
         <img src="/utilities/images/loading.gif"/>
     </div>
+
 </template>

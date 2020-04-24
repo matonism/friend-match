@@ -7,7 +7,7 @@ import MiCoolComponent from "../../micomponent-framework/MiCoolComponent.js";
 class CustomInput extends MiCoolComponent {
 
     static get observedAttributes(){
-        return ['label', 'name', 'file-input-label', 'variant', 'error'];
+        return ['label', 'name', 'file-input-label', 'variant', 'error', 'value', 'hide-label'];
     }
     
     constructor(){
@@ -32,6 +32,10 @@ class CustomInput extends MiCoolComponent {
         }else{
             inputField.classList.remove('error');
             textarea.classList.remove('error');
+        }
+
+        if(!!this.getAttribute('value')){
+            inputField.value = this.getAttribute('value');
         }
     }
 
@@ -59,6 +63,10 @@ class CustomInput extends MiCoolComponent {
         if(fieldType == 'button'){
             inputLabel.classList.add('hide');
         }
+        
+        if(this.getAttribute('hide-label')){
+            inputLabel.classList.add('hide');
+        }
 
         if(fieldType == 'textarea'){
             let textarea = this.shadowRoot.querySelector('textarea');
@@ -66,6 +74,10 @@ class CustomInput extends MiCoolComponent {
             textarea.addEventListener('keyup', this.handleKeyUp);
             textarea.addEventListener('blur', this.handleBlur);
             inputField.classList.add('hide');
+        }
+
+        if(fieldType == 'range'){
+            inputField.addEventListener('input', this.handleKeyUp);
         }
 
         // if(!!this.id){
@@ -95,7 +107,7 @@ class CustomInput extends MiCoolComponent {
 
     handleKeyUp(event){
         let component = event.currentTarget.getRootNode().host;
-        let inputChangedEvent = new CustomEvent('custominputkeyup', {
+        let inputChangedEvent = new CustomEvent('custominputset', {
             bubbles: true,
             detail: {
                 inputField: event.currentTarget.name,
