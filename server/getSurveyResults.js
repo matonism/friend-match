@@ -2,9 +2,9 @@
 const AWS = require('aws-sdk');
 const xlsx = require('node-xlsx');
 // get reference to S3 client
-const s3 = new AWS.S3({ accessKeyId: 'AKIAIRGU23KGR6LNZHYA', secretAccessKey: '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' });
-
+const s3 = new AWS.S3({ accessKeyId: 'AKIAVNLBS73O3SRSIUTW', secretAccessKey: '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' });
 function getSurveyResults(questionBank){
+    console.log('in survey results');
     return getPossibleResults().then(possibleResults => {
         // return getSimpleDiffResults(possibleResults, questionBank);
         return getStandardDeviationResults(possibleResults, questionBank);
@@ -142,6 +142,7 @@ function getPossibleResults(){
                 resolve(answerBank);
             });
         }catch(error){
+            console.log(error);
             reject(error)
         }
         // return {

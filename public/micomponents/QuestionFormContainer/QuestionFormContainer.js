@@ -60,8 +60,8 @@ class QuestionFormContainer extends MiCoolComponent {
                 try{
                     $.ajax({
                         type: "GET",
-                        url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyQuestions",
-                        // url : "http://localhost:3000/getSurveyQuestions",
+                        // url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyQuestions",
+                        url : "http://localhost:3000/getSurveyQuestions",
                         dataType: "json",
                         crossDomain: "true",
                         contentType: "application/json; charset=utf-8",
