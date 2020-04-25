@@ -18,8 +18,8 @@ exports.handler = async (event) => {
 };
 function getSurveyResults(questionBank){
     return getPossibleResults().then(possibleResults => {
-        // return getSimpleDiffResults(possibleResults, questionBank);
-        return getStandardDeviationResults(possibleResults, questionBank);
+        return getSimpleDiffResults(possibleResults, questionBank);
+        // return getStandardDeviationResults(possibleResults, questionBank);
     });
     
 }
@@ -42,7 +42,10 @@ function getSimpleDiffResults(possibleResults, questionBank){
             possibleResults[personIndex].diff += answerDiff;       
 
             if(index == questionBank.length - 1){
-                let rawScore = (1 - (possibleResults[personIndex].diff / (questionBank.length * 100))) * 100;
+                let rawScore = (1 - (possibleResults[personIndex].diff / (questionBank.length * 50))) * 100;
+                if(rawScore < 0){
+                    rawScore = 0;
+                }
                 possibleResults[personIndex].score = parseFloat(rawScore.toFixed(2));
                 scoreMap.push({name: personIndex, score: possibleResults[personIndex].score});
             }
@@ -114,6 +117,9 @@ function getStandardDeviation(x, y, xAverage, yAverage) {
 
     let yStandardDev = Math.sqrt(sumOfSquaredYDifferences / (shortestArrayLength - 1));
     let finalAnswer = (1 - yStandardDev) * 100;
+    if(finalAnswer < 0){
+        finalAnswer = 0;
+    }
     return parseFloat(finalAnswer.toFixed(2));
 
 }

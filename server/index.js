@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+dotenv.config();
 var express = require('express'); // Express web server framework
 // var request = require('request'); 
 var cors = require('cors');

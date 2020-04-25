@@ -1,13 +1,18 @@
+const dotenv = require('dotenv');
+dotenv.config();
 // dependencies
 const AWS = require('aws-sdk');
 const xlsx = require('node-xlsx');
 // get reference to S3 client
-const s3 = new AWS.S3({ accessKeyId: 'AKIAVNLBS73O3SRSIUTW', secretAccessKey: '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' });
+
+//keys fail if I commit them to github
+//TODO: use process.env
+const s3 = new AWS.S3({ accessKeyId: process.env.S3_ACCESS_KEY, secretAccessKey: process.env.S3_SECRET_KEY });
 function getSurveyResults(questionBank){
-    console.log('in survey results');
+   // console.log('in survey results');
     return getPossibleResults().then(possibleResults => {
-        // return getSimpleDiffResults(possibleResults, questionBank);
-        return getStandardDeviationResults(possibleResults, questionBank);
+        return getSimpleDiffResults(possibleResults, questionBank);
+        //return getStandardDeviationResults(possibleResults, questionBank);
     });
     
 }
@@ -30,7 +35,10 @@ function getSimpleDiffResults(possibleResults, questionBank){
             possibleResults[personIndex].diff += answerDiff;       
 
             if(index == questionBank.length - 1){
-                let rawScore = (1 - (possibleResults[personIndex].diff / (questionBank.length * 100))) * 100;
+                let rawScore = (1 - (possibleResults[personIndex].diff / (questionBank.length * 50))) * 100;
+                if(rawScore < 0){
+                    rawScore = 0;
+                }
                 possibleResults[personIndex].score = parseFloat(rawScore.toFixed(2));
                 scoreMap.push({name: personIndex, score: possibleResults[personIndex].score});
             }
@@ -101,7 +109,24 @@ function getStandardDeviation(x, y, xAverage, yAverage) {
     }
 
     let yStandardDev = Math.sqrt(sumOfSquaredYDifferences / (shortestArrayLength - 1));
+    console.log(yStandardDev);
+    
+    //with conversion to -1 - 1 range
+    //me test - max of 40-20
+    //50 test - max of 29-20
+    //100 test - -0.1 - -6.0
+    // let finalAnswer = 100 - ((yStandardDev + 1) * 50);
+
+    //with conversion to -1 - 1 range
+    //me test - max of 78-22
+    //50 test - max of 29 span of 10
+    //100 test - -1 - -13
+
+    //this 1 decides the cutoff point.  If the standard deviation's range is 2 (determined by possible values -1 to 1), then if you are 50% away from me, you are nothing like me
     let finalAnswer = (1 - yStandardDev) * 100;
+    if(finalAnswer < 0){
+        finalAnswer = 0;
+    }
     return parseFloat(finalAnswer.toFixed(2));
 
 }
@@ -138,7 +163,7 @@ function getPossibleResults(){
                     answerBank[currentPerson].questions = createObjectsFromArrays(workbook[i].data);
                     answerBank[currentPerson].diff = 0;
                 }
-                console.log(answerBank);
+                //console.log(answerBank);
                 resolve(answerBank);
             });
         }catch(error){

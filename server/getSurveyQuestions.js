@@ -1,8 +1,10 @@
+const dotenv = require('dotenv');
+dotenv.config();
 // dependencies
 const AWS = require('aws-sdk');
 const xlsx = require('node-xlsx');
 // get reference to S3 client
-const s3 = new AWS.S3({ accessKeyId: 'AKIAVNLBS73O3SRSIUTW', secretAccessKey: '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' });
+const s3 = new AWS.S3({ accessKeyId: process.env.S3_ACCESS_KEY, secretAccessKey: process.env.S3_SECRET_KEY });
 
 function getSurveyQuestions(){
     return new Promise((resolve, reject) => {
