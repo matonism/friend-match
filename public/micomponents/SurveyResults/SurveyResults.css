@@ -1,6 +1,6 @@
 .results-page{
 	text-align: center;
-    padding: 6rem 10rem;
+    padding: 4rem 10rem;
 }
 
 .question-header{
@@ -15,4 +15,30 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+}
+
+survey-results-line.odd {
+    background-color: #f3f3f3;
+}
+
+survey-results-line.even {
+    background-color: #e1e8ef;
+}
+
+
+
+.thank-you-text {
+	font-size: 0.8rem;
+	line-height: 1.9rem;
+	padding: 0rem 0rem 2rem;
+	font-family: Montserrat;
+}
+
+
+@media only screen and (max-width: 765px){
+    .results-page{
+        text-align: center;
+        padding: 4rem 0rem;
+    }
+    
 }

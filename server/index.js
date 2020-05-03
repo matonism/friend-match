@@ -4,6 +4,7 @@ var express = require('express'); // Express web server framework
 // var request = require('request'); 
 var cors = require('cors');
 var fs = require('fs');
+var url = require('url');
 // const path = require('path')
 
 // var querystring = require('querystring');
@@ -68,14 +69,22 @@ function handleRedirect(req, res) {
 // serverController.handleRequests(app);
 
 app.post('/getSurveyResults', (request, response) => {
-    getSurveyResults(request.body).then(scoreMap => {
+    let queryParams = url.parse(request.url, true).query;
+    getSurveyResults(queryParams, request.body).then(scoreMap => {
         response.send(scoreMap);
+    }).catch(error => {
+        response.status = 400;
+        response.send(error);
     });
 });
 
 app.get('/getSurveyQuestions', (request, response) => {
-    getSurveyQuestions().then(questionData => {
+    let queryParams = url.parse(request.url, true).query;
+    getSurveyQuestions(queryParams).then(questionData => {
         response.send(questionData);
+    }).catch(error => {
+        response.status = 400;
+        response.send(error);
     })
 });
 

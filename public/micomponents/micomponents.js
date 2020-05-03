@@ -13,6 +13,9 @@ customElements.define('survey-results', SurveyResults);
 import SurveyResultsLine from './SurveyResultsLine/SurveyResultsLine.js';
 customElements.define('survey-results-line', SurveyResultsLine);
 
+import QuizSelector from './QuizSelector/QuizSelector.js';
+customElements.define('quiz-selector', QuizSelector);
+
 // import HoverBox from './HoverBox/HoverBox.js';
 // customElements.define('hover-box', HoverBox);
 

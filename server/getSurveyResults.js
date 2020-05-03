@@ -3,16 +3,22 @@ dotenv.config();
 // dependencies
 const AWS = require('aws-sdk');
 const xlsx = require('node-xlsx');
+const getBucketFileForQuiz = require('./getBucketFileForQuiz.js');
 // get reference to S3 client
 
 //keys fail if I commit them to github
 //TODO: use process.env
 const s3 = new AWS.S3({ accessKeyId: process.env.S3_ACCESS_KEY, secretAccessKey: process.env.S3_SECRET_KEY });
-function getSurveyResults(questionBank){
+function getSurveyResults(queryParams, questionBank){
    // console.log('in survey results');
-    return getPossibleResults().then(possibleResults => {
+    return getPossibleResults(queryParams).then(possibleResults => {
         return getSimpleDiffResults(possibleResults, questionBank);
         //return getStandardDeviationResults(possibleResults, questionBank);
+    }).catch(error => {
+        return {
+            status: 400,
+            error: error
+        };
     });
     
 }
@@ -132,12 +138,16 @@ function getStandardDeviation(x, y, xAverage, yAverage) {
 }
 
 
-function getPossibleResults(){
+function getPossibleResults(queryParams){
     return new Promise((resolve, reject) => {
         try{
+            let bucketFileName = getBucketFileForQuiz(queryParams.quiz);
+            if(bucketFileName == null){
+                reject('There is no data set for that code');
+            }
             var params = {
                 Bucket: "friend-survey",
-                Key: "SurveyAnswers.xlsx"
+                Key: bucketFileName
             };
         
             var file = s3.getObject(params).createReadStream();
@@ -150,7 +160,7 @@ function getPossibleResults(){
             file.on('end', function () {
                 var buffer = Buffer.concat(buffers);
                 var workbook = xlsx.parse(buffer);
-                //console.log("workbook", workbook);
+                console.log("workbook", workbook);
 
                 let answerBank = {};
                 //loop through all the worksheets
@@ -158,7 +168,7 @@ function getPossibleResults(){
                 for(let i = 1; i < workbook.length; i++){
                     let currentWorksheet = workbook[i];
                     let currentPerson = currentWorksheet.name;
-                    //console.log(currentPerson);
+                    console.log(currentPerson);
                     answerBank[currentPerson] = {};
                     answerBank[currentPerson].questions = createObjectsFromArrays(workbook[i].data);
                     answerBank[currentPerson].diff = 0;

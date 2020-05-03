@@ -1,34 +1,43 @@
 // dependencies
 const AWS = require('aws-sdk');
 const xlsx = require('node-xlsx');
+const getBucketFileForQuiz = require('./getBucketFileForQuiz.js');
 // get reference to S3 client
 const s3 = new AWS.S3({ accessKeyId: process.env.accesskey, secretAccessKey: process.env.privatekey });
 
 exports.handler = async (event) => {
     console.log(event);
-    return getSurveyQuestions().then(surveyQuestions => {
+    return getSurveyQuestions(event.queryStringParameters).then(surveyQuestions => {
         // TODO implement
         const response = {
             statusCode: 200,
             body: JSON.stringify(surveyQuestions),
         };
         return response;
+    }).catch(error => {
+        const response = {
+            statusCode: 400,
+            body: error
+        }
+        return response
     });
 };
 
-function getSurveyQuestions(){
+function getSurveyQuestions(queryParams){
     return new Promise((resolve, reject) => {
         try{
-            console.log('in get survey questions')
+            let bucketFileName = getBucketFileForQuiz(queryParams.quiz);
+            if(bucketFileName == null){
+                throw ('There is no data set for that code');
+            }
             var params = {
                 Bucket: "friend-survey",
-                Key: "SurveyAnswers.xlsx"
+                Key: bucketFileName
             };
         
             var file = s3.getObject(params).createReadStream();
             var buffers = [];
         
-            console.log(file);
             file.on('data', function (data) {
                 buffers.push(data);
             });
@@ -36,7 +45,7 @@ function getSurveyQuestions(){
             file.on('end', function () {
                 var buffer = Buffer.concat(buffers);
                 var workbook = xlsx.parse(buffer);
-                console.log("workbook", workbook);
+                // console.log("workbook", workbook);
                 let convertedSpreadsheet = createObjectsFromArrays(workbook[0].data);
                 resolve(convertedSpreadsheet);
             });
@@ -55,7 +64,7 @@ function getSurveyQuestions(){
 function createObjectsFromArrays(worksheetData){
     let convertedSpreadsheet = [];
     let headerRow = worksheetData[0];
-    for(let i = 1; i < worksheetData.length; i++){
+    for(i = 1; i < worksheetData.length; i++){
         let rowObject = {};
         let currentRow = worksheetData[i];
         headerRow.forEach((columnHeader, index) => {

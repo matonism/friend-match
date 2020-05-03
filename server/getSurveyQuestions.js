@@ -3,15 +3,21 @@ dotenv.config();
 // dependencies
 const AWS = require('aws-sdk');
 const xlsx = require('node-xlsx');
+const getBucketFileForQuiz = require('./getBucketFileForQuiz.js');
+
 // get reference to S3 client
 const s3 = new AWS.S3({ accessKeyId: process.env.S3_ACCESS_KEY, secretAccessKey: process.env.S3_SECRET_KEY });
 
-function getSurveyQuestions(){
+function getSurveyQuestions(queryParams){
     return new Promise((resolve, reject) => {
         try{
+            let bucketFileName = getBucketFileForQuiz(queryParams.quiz);
+            if(bucketFileName == null){
+                throw ('There is no data set for that code');
+            }
             var params = {
                 Bucket: "friend-survey",
-                Key: "SurveyAnswers.xlsx"
+                Key: bucketFileName
             };
         
             var file = s3.getObject(params).createReadStream();

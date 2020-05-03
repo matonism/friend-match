@@ -10,6 +10,7 @@ class QuestionFormContainer extends MiCoolComponent {
     connectedCallback(){
         super.connectedCallback();
         this.questionIndex = 0;
+        this.selectedQuiz = '';
     }
 
     renderedCallback(){
@@ -29,6 +30,7 @@ class QuestionFormContainer extends MiCoolComponent {
         });
 
         let questionForm = this.shadowRoot.querySelector("question-form");
+        let quizSelector = this.shadowRoot.querySelector("quiz-selector");
         
         questionForm.addEventListener("questionvalueset", event => {
             this.storeResult(event);
@@ -39,11 +41,19 @@ class QuestionFormContainer extends MiCoolComponent {
         });
 
         questionForm.addEventListener("previous", event => {
-            this.setCurrentQuestion(--this.questionIndex);
+            if(this.questionIndex > 0){
+                this.setCurrentQuestion(--this.questionIndex);
+            }
         });
         
-        this.getQuestions().then(() => {
-            this.initializeQuestionForm();
+        quizSelector.addEventListener("quizselected", event => {
+            this.selectedQuiz = event.detail;
+            this.getQuestions().then(() => {
+                this.shadowRoot.querySelector('.start-over-button.mobile').classList.remove('hide');
+                quizSelector.classList.add('hide');
+                this.initializeQuestionForm();
+                questionForm.classList.remove('hide');
+            });
         });
 
 
@@ -57,23 +67,25 @@ class QuestionFormContainer extends MiCoolComponent {
 
             if(valid){
                 let questionFormContainer = this;
+                let quizSelector = this.shadowRoot.querySelector('quiz-selector');
                 try{
                     $.ajax({
                         type: "GET",
-                        // url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyQuestions",
-                        url : "http://localhost:3000/getSurveyQuestions",
+                        url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyQuestions?quiz=" + this.selectedQuiz,
+                        // url : "http://localhost:3000/getSurveyQuestions?quiz=" + this.selectedQuiz,
                         dataType: "json",
                         crossDomain: "true",
                         contentType: "application/json; charset=utf-8",
                     success: function (data) {
-                        console.log(data);
+                        //console.log(data);
                         questionFormContainer.questionBank = data;
                         questionFormContainer.hideProcessingWall();
                         resolve(data);
                     },
                     error: function (error, textStatus) {
                         // show an error message
-                        questionFormContainer.showError();
+                        quizSelector.showError(error.responseText);
+                        questionFormContainer.hideProcessingWall();
                         reject(error);
                     }});
                 }catch(error){
@@ -100,7 +112,7 @@ class QuestionFormContainer extends MiCoolComponent {
     }
 
     setCurrentQuestion(questionIndex){
-        if(questionIndex < this.questionBank.length){
+        if(questionIndex < this.questionBank.length && questionIndex >= 0){
             let questionForm = this.shadowRoot.querySelector('question-form');
             this.setAttribute('current-question', questionIndex + 1);
             questionForm.setAttribute('question-header', 'Question ' + this.getAttribute('current-question') + '/' + this.getAttribute('question-count'));
@@ -113,6 +125,7 @@ class QuestionFormContainer extends MiCoolComponent {
         }else if(questionIndex == this.questionBank.length){
             this.submitAnswers();
         }
+
     }
 
     storeResult(event){
@@ -129,19 +142,18 @@ class QuestionFormContainer extends MiCoolComponent {
     submitAnswers(){
         this.showProcessingWall();
         let valid = true;
-        console.log('figure out submitting forms in nodejs and sending notification to me');
         if(valid){
             let questionFormContainer = this;
             $.ajax({
                 type: "POST",
-                url : "http://localhost:3000/getSurveyResults",
-                // url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyResults",
+                // url : "http://localhost:3000/getSurveyResults?quiz=" + this.selectedQuiz,
+                url : "https://2l19p5fcf2.execute-api.us-east-2.amazonaws.com/getSurveyResults?quiz=" + this.selectedQuiz,
                 dataType: "json",
                 crossDomain: "true",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(this.questionBank),
             success: function (data) {
-                console.log(data);
+                //console.log(data);
                 let surveyResultsElement = questionFormContainer.shadowRoot.querySelector('survey-results');
                 surveyResultsElement.results = data;
                 surveyResultsElement.classList.remove('hide');
@@ -150,7 +162,7 @@ class QuestionFormContainer extends MiCoolComponent {
                 questionFormContainer.hideProcessingWall();
             },
             error: function (error, textStatus) {
-                questionFormContainer.showError();
+                questionFormContainer.showError(error.responseText);
                 questionFormContainer.hideProcessingWall();
             }});
 
@@ -164,7 +176,7 @@ class QuestionFormContainer extends MiCoolComponent {
 
 
     setInput(event){
-        console.log('input changed');
+        //console.log('input changed');
         this.form[event.detail.inputField] = event.detail.value;
     }
 
@@ -249,9 +261,12 @@ class QuestionFormContainer extends MiCoolComponent {
         this.hideProcessingWall();
     }
     
-    showError(){
-        this.setAttribute('message-text', 'Sorry! There was an issue processing your request.  Feel free to reach out to me at michaelmatonis@hotmail.com or give me a call at the number listed below.');
-        this.showFormCompleted();
+    showError(errorMessage){
+        let message = "Sorry! There was an issue processing your request.  Feel free to reach out to me at michaelmatonis@hotmail.com or give me a call at the number listed below.Sorry! There was an issue processing your request.  Feel free to reach out to me at michaelmatonis@hotmail.com or give me a call at the number listed below.";
+        if(errorMessage){
+            message = errorMessage;
+        }
+        this.setAttribute('input-error-message', message);
     }
 }
 
