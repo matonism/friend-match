@@ -15,7 +15,7 @@
     "node-xlsx": "^0.15.0",
     "s3": "^4.4.0",
     "url": "^0.11.0",
-    "xlsx": "^0.15.6"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "test": "./server/index.js",
