@@ -17,6 +17,8 @@ function getBucketFileForQuiz(quizString){
         bucketFile = 'MatonisKidsQuizBank.xlsx';
     }else if(quizString.toLowerCase() == 'ktrainofthought'){
         bucketFile = 'KennyAnswerQuizBank.xlsx';
+    }else if(quizString.toLowerCase().includes('exactmatch')){
+        bucketFile = quizString + '.xlsx';
     }
 
     return bucketFile;

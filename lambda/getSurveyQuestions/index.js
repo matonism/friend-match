@@ -35,20 +35,30 @@ function getSurveyQuestions(queryParams){
                 Key: bucketFileName
             };
         
-            var file = s3.getObject(params).createReadStream();
-            var buffers = [];
-        
-            file.on('data', function (data) {
-                buffers.push(data);
-            });
-        
-            file.on('end', function () {
-                var buffer = Buffer.concat(buffers);
-                var workbook = xlsx.parse(buffer);
-                // console.log("workbook", workbook);
-                let convertedSpreadsheet = createObjectsFromArrays(workbook[0].data);
-                resolve(convertedSpreadsheet);
-            });
+            try{
+                var file = s3.getObject(params).createReadStream();
+                var buffers = [];
+            
+                file.on('data', function (data) {
+                    buffers.push(data);
+                });
+            
+                file.on('end', function () {
+                    var buffer = Buffer.concat(buffers);
+                    var workbook = xlsx.parse(buffer);
+                    // console.log("workbook", workbook);
+                    let convertedSpreadsheet = createObjectsFromArrays(workbook[0].data);
+                    resolve(convertedSpreadsheet);
+                });
+                
+            }catch(error){
+                if(bucketFileName.toLowerCase().includes('exactmatch')){
+                    throw ('There is no data set for that code');
+                }else{
+                    throw error;
+                }
+            }
+            
         }catch(error){
             reject(error)
         }

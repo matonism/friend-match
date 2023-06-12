@@ -1,0 +1,40 @@
+Friend Survey Ideas
+Weighting
+ - listed in excel
+ - number divided by total weighting 
+ - weighteddiff = weight * difference
+ - total diff / (sumofweights * 50)
+ - refactor to include
+
+Refactor server code to be more easily converted to lambda
+ - keep same file but comment out pieces?
+
+Consider Function mostly off a single spreadsheet
+ - won't have to edit every spreadsheet for duplicates
+ - Use tags for each line item?
+ 	- ex: matonis-kids-l, cleveland-friends-m, matonis-s
+ - Use one tag column for each sheet?
+ - Maybe separate standard and person sheets?
+ - Read tags when deciding whether or not to use person in results
+ 	- if they have the tag fir the specified data set, use them in results
+
+ Consider an correctness threshold
+  - if a user is within 5%, consider that 100% likeness and 0 difference
+  	- when calculating difference, subtract the correctness threshold and it end up negative, set it to 0
+
+Create separate endpoint handler class
+ - extend class using localhost or aws
+ - use process.env variables to decide which one to use
+ - default to localhost
+
+
+--------- DONE -----------
+
+Fix UI to display maximum number of results
+
+Fix UI to display explanation of results
+
+Add in additional traits
+ - passionate indifferent
+ - impulsive premeditated
+ - decisive tentative
